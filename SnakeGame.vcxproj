@@ -125,7 +125,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="hideCursor.cpp" />
     <ClCompile Include="SnakeGame.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hideCursor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
