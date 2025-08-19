@@ -1,4 +1,5 @@
 ﻿#include "hideCursor.h"
+#include <conio.h>	//console input output
 #include <iostream>
 
 bool gameOver{};
@@ -51,7 +52,13 @@ void Draw() {
 		for (int j = 0; j < width; j++) {
 			if (j == 0 || j == width - 1)
 				std::cout << "#";
-			std::cout << " ";
+
+			if (i == x && j == y)
+				std::cout << "O";	//print snake head
+			else if (i == fruitX && j == fruitY)
+				std::cout << "F";
+			else
+				std::cout << " ";
 		}
 		std::cout << std::endl;
 	}
@@ -64,7 +71,26 @@ void Draw() {
 }
 
 void Input() {
-
+	if (_kbhit()) {	//checks if key is pressed asynchroniosly
+		// wasd commands
+		switch (_getch()) {
+		case 'w':
+			dir = eDirection::UP;
+			break;
+		case 'a':
+			dir = eDirection::LEFT;
+			break;
+		case 's':
+			dir = eDirection::DOWN;
+			break;
+		case 'd':
+			dir = eDirection::RIGHT;
+			break;
+		case 'x':
+			gameOver = true;
+			break;
+		}
+	}
 }
 
 void Logic() {
