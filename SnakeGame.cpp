@@ -1,5 +1,6 @@
 ﻿#include "hideCursor.h"
 #include <conio.h>	//console input output
+#include <windows.h>
 #include <iostream>
 
 bool gameOver{};
@@ -53,7 +54,7 @@ void Draw() {
 			if (j == 0 || j == width - 1)
 				std::cout << "#";
 
-			if (i == x && j == y)
+			if (i == y && j == x)
 				std::cout << "O";	//print snake head
 			else if (i == fruitX && j == fruitY)
 				std::cout << "F";
@@ -94,7 +95,25 @@ void Input() {
 }
 
 void Logic() {
+	switch (dir) {	//change head coordinates based on dir
+	case eDirection::LEFT:
+		--x;
+		break;
+	case eDirection::RIGHT:
+		++x;
+		break;
+	case eDirection::UP:
+		--y;
+		break;
+	case eDirection::DOWN:
+		++y;
+		break;
+	default:
+		break;
+	}
 
+	if (x < 0 || x > width || y < 0 || y > height)
+		gameOver = true;
 }
 
 int main() {
@@ -103,6 +122,7 @@ int main() {
 		Draw();
 		Input();
 		Logic();
+		Sleep(50);	//make snake speed slower
 	}
 
 	return 0;
