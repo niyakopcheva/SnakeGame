@@ -48,7 +48,8 @@ void Setup() {
 
 void Draw() {
 	hideCursor();	//to not display cursor in console while printing
-	system("cls");	//clear console
+	//system("cls");	//clear console
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0,0 });	//clear console without the flickering
 
 	//print top border
 	for (int i = 0; i < width + 1; i++)
@@ -154,7 +155,7 @@ void Logic() {
 		//gameOver = true;
 
 	//mod u can go through walls
-	if (x >= width)
+	if (x >= width-1)
 		x = 0;
 	else if (x < 0)
 		x = width - 1;
