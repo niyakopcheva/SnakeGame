@@ -15,11 +15,18 @@ int x{}, y{};
 //fruit coordinates
 int fruitX{}, fruitY{};
 
-int score{0};
+int score{ 0 };
+
+int sleepTime{ 70 };
+
+//tail coordinates & length
+int tailX[100], tailY[100];
+int tailLength{};
 
 //directions
-enum class eDirection{ STOP, LEFT, RIGHT, UP, DOWN};
+enum class eDirection { STOP, LEFT, RIGHT, UP, DOWN };
 eDirection dir{};
+
 
 
 
@@ -44,10 +51,10 @@ void Draw() {
 	system("cls");	//clear console
 
 	//print top border
-	for (int i = 0; i < width+1; i++) 
+	for (int i = 0; i < width + 1; i++)
 		std::cout << "#";
 	std::cout << std::endl;
-	
+
 	//print l and r walls
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
@@ -56,19 +63,31 @@ void Draw() {
 
 			if (i == y && j == x)
 				std::cout << "O";	//print snake head
-			else if (i == fruitX && j == fruitY)
+			else if (i == fruitY && j == fruitX)
 				std::cout << "F";
 			else
-				std::cout << " ";
+			{
+				bool segmentIsPrinted{ false };
+				for (int k = 0; k < tailLength; k++) {
+					if (tailX[k] == j && tailY[k] == i) {
+						std::cout << "o";
+						segmentIsPrinted = true;
+					}
+				}
+				if (!segmentIsPrinted)
+					std::cout << " ";
+			}
 		}
 		std::cout << std::endl;
 	}
 
 	//print bottom border
-	for (int i = 0; i < width+1; i++) 
+	for (int i = 0; i < width + 1; i++)
 		std::cout << "#";
 	std::cout << std::endl;
-	
+	std::cout << " \n";
+	std::cout << "SCORE: " << score << '\n';
+
 }
 
 void Input() {
@@ -95,25 +114,55 @@ void Input() {
 }
 
 void Logic() {
+	//handle tail coordinates
+	int prevX{ tailX[0] };
+	int prevY{ tailY[0] };
+	int prev2X{}, prev2Y{};
+	tailX[0] = x;
+	tailY[0] = y;
+
+	for (int i = 1; i < tailLength; i++) {
+		prev2X = tailX[i];
+		prev2Y = tailY[i];
+		tailX[i] = prevX;
+		tailY[i] = prevY;
+		prevX = prev2X;
+		prevY = prev2Y;
+	}
+
 	switch (dir) {	//change head coordinates based on dir
 	case eDirection::LEFT:
-		--x;
+		x--;
 		break;
 	case eDirection::RIGHT:
-		++x;
+		x++;
 		break;
 	case eDirection::UP:
-		--y;
+		y--;
 		break;
 	case eDirection::DOWN:
-		++y;
+		y++;
 		break;
 	default:
 		break;
 	}
 
+	if (dir == eDirection::UP || dir == eDirection::DOWN)
+		sleepTime = 100;
+
 	if (x < 0 || x > width || y < 0 || y > height)
 		gameOver = true;
+
+	//keep score and spawn new fruit
+	if (x == fruitX && y == fruitY) {	//if snake head eats fruit
+		score += 10;
+
+		fruitX = rand() % width;		//generate random num between 0 and width-1
+		fruitY = rand() % height;
+
+		tailLength++;
+
+	}
 }
 
 int main() {
@@ -122,7 +171,7 @@ int main() {
 		Draw();
 		Input();
 		Logic();
-		Sleep(50);	//make snake speed slower
+		Sleep(sleepTime);	//make snake speed slower
 	}
 
 	return 0;
