@@ -17,7 +17,7 @@ int fruitX{}, fruitY{};
 
 int score{ 0 };
 
-int sleepTime{ 70 };
+int sleepTime{ 50 };
 
 //tail coordinates & length
 int tailX[100], tailY[100];
@@ -148,10 +148,28 @@ void Logic() {
 	}
 
 	if (dir == eDirection::UP || dir == eDirection::DOWN)
-		sleepTime = 100;
+		sleepTime = 75;
 
-	if (x < 0 || x > width || y < 0 || y > height)
-		gameOver = true;
+	//if (x < 0 || x > width || y < 0 || y > height)
+		//gameOver = true;
+
+	//mod u can go through walls
+	if (x >= width)
+		x = 0;
+	else if (x < 0)
+		x = width - 1;
+
+	if (y >= height)
+		y = 0;
+	else if (y < 0)
+		y = height - 1;
+
+	//game over if you kill urself
+	//check coords of tail and if they are the same as the head
+	for (int i = 0; i < tailLength; i++) {
+		if (tailX[i] == x && tailY[y] == y)
+			gameOver = true;
+	}
 
 	//keep score and spawn new fruit
 	if (x == fruitX && y == fruitY) {	//if snake head eats fruit
